@@ -6,6 +6,7 @@ let viewHeight = window.innerHeight;
 let viewWidth = window.innerWidth;
 
 const ballColor = 'red';
+const padColor = 'blue';
 
 // Game pad properties
 let pad = {
@@ -40,10 +41,12 @@ if (gameCanvas) {
 function renderScene(canvas: HTMLCanvasElement) {
   const ctx = canvas.getContext('2d');
   if (ctx) {
+    // Pad
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = 'blue';
+    ctx.fillStyle = padColor;
     ctx.fillRect(pad.x, pad.y, pad.width, pad.height);
 
+    // Ball
     ctx.beginPath();
     ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
     ctx.fillStyle = ballColor;
@@ -68,26 +71,29 @@ function animateBall() {
   ball.x += ball.dx;
   ball.y += ball.dy;
 
+  // Check for collisions with left and right walls
   if (ball.x + ball.radius >= viewWidth || ball.x - ball.radius <= 0) {
     ball.dx *= -1;
     ball.x = Math.max(ball.radius, Math.min(viewWidth - ball.radius, ball.x));
   }
 
-  const hitsPadHorizontally =
-    ball.x + ball.radius >= pad.x && ball.x - ball.radius <= pad.width + pad.x;
-  const hitsPadVertically =
-    ball.y + ball.radius >= pad.y && ball.y - ball.radius <= pad.y + pad.height;
+  // Check for collision with the pad
+  const hitsPadHorizontally = ball.x + ball.radius >= pad.x && ball.x - ball.radius <= pad.width + pad.x;
+  const hitsPadVertically = ball.y + ball.radius >= pad.y && ball.y - ball.radius <= pad.y + pad.height;
 
+  // Only reverse the vertical direction if the ball is moving downwards and collides with the pad
   if (ball.dy > 0 && hitsPadHorizontally && hitsPadVertically) {
     ball.dy *= -1;
     ball.y = pad.y - ball.radius;
   }
 
+  // Check for collision with the top wall
   if (ball.y - ball.radius <= 0) {
     ball.dy *= -1;
     ball.y = ball.radius;
   }
 
+  // Check for collision with the bottom wall
   if (ball.y + ball.radius >= viewHeight) {
     ball.dy *= -1;
     ball.y = viewHeight - ball.radius;
