@@ -3,6 +3,8 @@ import './style.css';
 const gameCanvas = document.querySelector<HTMLCanvasElement>('#gameCanvas');
 export const aboutButton = document.querySelector<HTMLButtonElement>('#aboutButton');
 export const pauseButton = document.querySelector<HTMLButtonElement>('#pauseButton');
+export const ballSpeedButton = document.querySelector<HTMLButtonElement>('#ballSpeedButton');
+export const padSpeedButton = document.querySelector<HTMLButtonElement>('#padSpeedButton');
 
 let viewHeight = window.innerHeight;
 let viewWidth = window.innerWidth;
@@ -15,7 +17,7 @@ const cellColor = 'green';
 export let isPaused = false;
 
 // Pad properties
-let pad = {
+export let pad = {
   x: viewWidth / 2 - 25,
   y: viewHeight - 50,
   width: 100,
@@ -24,7 +26,7 @@ let pad = {
 };
 
 // Ball properties
-let ball = {
+export let ball = {
   x: viewWidth / 2,
   y: viewHeight / 2,
   radius: 10,
@@ -176,6 +178,17 @@ function movePad(x: number) {
 
   pad.x = Math.max(0, Math.min(viewWidth - pad.width, x));
   renderScene(gameCanvas);
+}
+
+export function setPadSpeed(speed: number) {
+  pad.speed = speed;
+}
+
+export function setBallSpeed(speed: number) {
+  ball.speed = speed;
+  const angle = Math.atan2(ball.dy, ball.dx);
+  ball.dx = Math.cos(angle) * ball.speed;
+  ball.dy = Math.sin(angle) * ball.speed;
 }
 
 addEventListener("keydown", (event) => {
