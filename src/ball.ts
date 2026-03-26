@@ -1,5 +1,6 @@
 import { bricks, removeBrickAtIndex, type Brick } from './bricks.ts';
 import { ball, pad, viewHeight, viewWidth } from './gameState.ts';
+import { playBrickHitSound } from './sound.ts';
 
 export function initializeBallVelocity() {
   const launchAngle = (Math.random() * Math.PI) / 2 + Math.PI / 4;
@@ -107,6 +108,7 @@ export function handleBrickCollisions() {
     }
 
     bounceBallOffBrick(brick);
+    playBrickHitSound();
     removeBrickAtIndex(index);
     return;
   }
