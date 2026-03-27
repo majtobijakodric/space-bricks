@@ -8,8 +8,8 @@ export function movePad(x: number) {
   pad.x = clampPadX(x);
 }
 
-export function movePadBy(delta: number) {
-  movePad(pad.x + delta);
+export function movePadBy(x: number) {
+  movePad(pad.x + x);
 }
 
 export function setPadSpeed(speed: number) {

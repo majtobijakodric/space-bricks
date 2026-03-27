@@ -4,7 +4,7 @@ export let viewWidth = window.innerWidth;
 export const ballColor = 'red';
 export const padColor = 'blue';
 export const backgroundColor = 'lightgray';
-export const cellColor = 'green';
+export const brickColor = 'green';
 
 export const CELL_SIDE_MARGIN_RATIO = 0.2;
 export const CELL_TOP_MARGIN_RATIO = 0.1;

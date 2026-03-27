@@ -10,11 +10,16 @@ import { updateRefreshRateEstimate } from './refreshRate.ts';
 
 export let refreshRateEstimate = await updateRefreshRateEstimate();
 
+
+// For fps estimation
+/*
 setInterval(() => {
   void updateRefreshRateEstimate().then((refreshRate) => {
+    console.log(refreshRate);
     refreshRateEstimate = refreshRate;
   });
 }, 1000);
+*/
 
 initializeBallVelocity();
 
