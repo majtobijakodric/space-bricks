@@ -1,9 +1,8 @@
-const scoreText = document.querySelector<HTMLParagraphElement>('#scoreText');
+import { updateScoreText } from './ui.ts';
+
 export let score = 0;
 
 export function updateScore(points: number) {
   score += points;
-  if (scoreText) {
-    scoreText.textContent = `Score: ${score}`;
-  }
+  updateScoreText(score);
 }

@@ -7,6 +7,7 @@ import { setupEventListeners } from './events.ts';
 import { startGameLoop } from './gameLoop.ts';
 import { renderScene } from './render.ts';
 import { updateRefreshRateEstimate } from './refreshRate.ts';
+import { initializeUi } from './ui.ts';
 
 export let refreshRateEstimate = await updateRefreshRateEstimate();
 
@@ -22,6 +23,7 @@ setInterval(() => {
 */
 
 initializeBallVelocity();
+initializeUi();
 
 if (gameCanvas) {
   setupCanvasSize();
