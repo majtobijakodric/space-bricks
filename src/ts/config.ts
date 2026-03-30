@@ -2,8 +2,8 @@
 // Keep easy-to-edit values here.
 
 export const canvasConfig = {
-  width: 900,
-  height: 720,
+  width: 800,
+  height: 600,
 };
 
 export const colorConfig = {

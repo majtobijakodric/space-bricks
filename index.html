@@ -12,21 +12,45 @@
 <body>
   <div id="app" class="min-h-screen px-4 py-6">
     <div class="mx-auto flex w-fit flex-col items-center gap-4">
-      <div class="flex w-full justify-end gap-2">
-      <p id="scoreText" type="button"
-        class="rounded-md bg-slate-800 px-3 py-1.5 text-sm font-medium text-white shadow">Score: 0</p>
+      <div class="w-full rounded-xl border border-slate-700/80 bg-slate-950/70 p-4 shadow-xl">
+        <div class="flex justify-end">
+          <div class="flex flex-wrap items-center justify-end gap-2">
+            <p id="scoreText"
+              class="rounded-md border border-slate-700 bg-slate-900 px-3 py-1.5 text-sm font-medium text-white shadow">
+              Score: 0
+            </p>
 
-      <button id="pauseButton" type="button"
-        class="rounded-md bg-slate-800 px-3 py-1.5 text-sm font-medium text-white shadow">Pause</button>
+            <p id="timerText"
+              class="rounded-md border border-slate-700 bg-slate-900 px-3 py-1.5 text-sm font-medium text-white shadow">
+              Time: 00:00
+            </p>
 
-      <button id="ballSpeedButton" type="button"
-        class="rounded-md bg-slate-800 px-3 py-1.5 text-sm font-medium text-white shadow">Ball speed</button>
+            <p id="modeText"
+              class="rounded-md border border-slate-700 bg-slate-900 px-3 py-1.5 text-sm font-medium text-white shadow">
+              Mode: Medium
+            </p>
 
-      <button id="padSpeedButton" type="button"
-        class="rounded-md bg-slate-800 px-3 py-1.5 text-sm font-medium text-white shadow">Pad speed</button>
+            <button id="pauseButton" type="button"
+              class="rounded-md bg-slate-800 px-3 py-1.5 text-sm font-medium text-white shadow">
+              Pause
+            </button>
 
-      <button id="aboutButton" type="button"
-        class="rounded-md bg-slate-800 px-3 py-1.5 text-sm font-medium text-white shadow">About</button>
+            <button id="ballSpeedButton" type="button"
+              class="rounded-md bg-slate-800 px-3 py-1.5 text-sm font-medium text-white shadow">
+              Ball speed
+            </button>
+
+            <button id="padSpeedButton" type="button"
+              class="rounded-md bg-slate-800 px-3 py-1.5 text-sm font-medium text-white shadow">
+              Pad speed
+            </button>
+
+            <button id="aboutButton" type="button"
+              class="rounded-md bg-slate-800 px-3 py-1.5 text-sm font-medium text-white shadow">
+              About
+            </button>
+          </div>
+        </div>
       </div>
 
       <canvas id="gameCanvas" width="800" height="600" class="block rounded-lg border border-slate-700 shadow-2xl"></canvas>
