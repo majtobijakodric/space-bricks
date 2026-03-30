@@ -1,4 +1,5 @@
 import '../style/style.css';
+import { initializeBackground } from './background.ts';
 import './buttons.ts';
 import { initializeBallVelocity } from './ball.ts';
 import { gameCanvas, setupCanvasSize } from './canvas.ts';
@@ -27,6 +28,7 @@ initializeUi();
 
 if (gameCanvas) {
   setupCanvasSize();
+  initializeBackground();
   initializeBricks();
   renderScene();
   startGameLoop();
