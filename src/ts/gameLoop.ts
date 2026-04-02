@@ -1,6 +1,6 @@
 import { gameCanvas } from './canvas.ts';
 import { handleBrickCollisions, handlePadCollision, handleWallCollisions, updateBallPosition } from './ball.ts';
-import { input, isPaused, pad } from './gameState.ts';
+import { input, isGameOver, isPaused, pad } from './gameState.ts';
 import { movePadBy } from './pad.ts';
 import { renderScene } from './render.ts';
 
@@ -15,6 +15,11 @@ function animateFrame() {
     return;
   }
 
+  if (isGameOver) {
+    renderScene();
+    return;
+  }
+
   if (input.left) {
     movePadBy(-pad.speed);
   }
@@ -25,6 +30,12 @@ function animateFrame() {
 
   updateBallPosition();
   handleWallCollisions();
+
+  if (isGameOver) {
+    renderScene();
+    return;
+  }
+
   handlePadCollision();
   handleBrickCollisions();
 

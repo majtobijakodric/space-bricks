@@ -1,4 +1,4 @@
-import { brickLayoutConfig, canvasConfig, colorConfig } from './config.ts';
+import { brickLayoutConfig, canvasConfig, colorConfig, featureConfig } from './config.ts';
 
 export let canvasHeight = canvasConfig.height;
 export let canvasWidth = canvasConfig.width;
@@ -12,6 +12,9 @@ export const BRICK_AREA_OFFSET_X = brickLayoutConfig.offsetX;
 export const BRICK_AREA_OFFSET_Y = brickLayoutConfig.offsetY;
 
 export let isPaused = false;
+export let isGameOver = false;
+export let lives = featureConfig.maxLives;
+export let hasHandledBottomMiss = false;
 
 export const pad = {
   x: canvasWidth / 2 - 25,
@@ -66,4 +69,29 @@ export function resetPadPosition() {
 
 export function setPaused(value: boolean) {
   isPaused = value;
+}
+
+export function setGameOver(value: boolean) {
+  isGameOver = value;
+}
+
+export function loseLife() {
+  lives = Math.max(0, lives - 1);
+}
+
+export function resetLives() {
+  lives = featureConfig.maxLives;
+}
+
+export function resetBottomMissState() {
+  hasHandledBottomMiss = false;
+}
+
+export function markBottomMissHandled() {
+  hasHandledBottomMiss = true;
+}
+
+export function setBallVelocity(x: number, y: number) {
+  ball.dx = x;
+  ball.dy = y;
 }

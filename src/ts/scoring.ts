@@ -6,3 +6,8 @@ export function updateScore(points: number) {
   score += points;
   updateScoreText(score);
 }
+
+export function resetScore() {
+  score = 0;
+  updateScoreText(score);
+}

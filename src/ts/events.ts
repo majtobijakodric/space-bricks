@@ -1,9 +1,13 @@
-import { input, pad } from './gameState.ts';
+import { input, isGameOver, pad } from './gameState.ts';
 import { movePad } from './pad.ts';
 import { renderScene } from './render.ts';
 
 export function setupEventListeners() {
   addEventListener('keydown', (event) => {
+    if (isGameOver) {
+      return;
+    }
+
     const step = pad.speed;
 
     switch (event.key) {
@@ -23,6 +27,10 @@ export function setupEventListeners() {
   });
 
   addEventListener('keyup', (event) => {
+    if (isGameOver) {
+      return;
+    }
+
     if (event.key === 'ArrowLeft') input.left = false;
     if (event.key === 'ArrowRight') input.right = false;
   });

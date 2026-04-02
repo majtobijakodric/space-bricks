@@ -1,7 +1,20 @@
 import { bricks, removeBrickAtIndex, type Brick } from './bricks.ts';
-import { ball, pad, canvasHeight, canvasWidth } from './gameState.ts';
+import { featureConfig } from './config.ts';
+import {
+  ball,
+  canvasHeight,
+  canvasWidth,
+  hasHandledBottomMiss,
+  loseLife,
+  markBottomMissHandled,
+  resetBottomMissState,
+  setGameOver,
+  lives,
+} from './gameState.ts';
 import { playBrickHitSound } from './sound.ts';
 import { updateScore } from './scoring.ts';
+import { showGameOverModal, updateLivesText } from './ui.ts';
+import { pad } from './gameState.ts';
 
 export function initializeBallVelocity() {
   const launchAngle = (Math.random() * Math.PI) / 2 + Math.PI / 4;
@@ -34,9 +47,35 @@ export function handleWallCollisions() {
     ball.y = ball.radius;
   }
 
-  if (ball.y + ball.radius >= canvasHeight) {
+  const bottomLimit = canvasHeight + (featureConfig.enableDeath ? featureConfig.deathBoundaryOffset : 0);
+  const ballBottom = ball.y + ball.radius;
+
+  if (featureConfig.enableDeath) {
+    if (hasHandledBottomMiss && ballBottom < canvasHeight) {
+      resetBottomMissState();
+    }
+
+    if (ball.dy > 0 && ballBottom >= bottomLimit) {
+      if (!hasHandledBottomMiss) {
+        loseLife();
+        updateLivesText(lives);
+        markBottomMissHandled();
+      }
+
+      ball.dy = -Math.abs(ball.dy);
+      ball.y = bottomLimit - ball.radius;
+
+      if (lives === 0) {
+        setGameOver(true);
+        void showGameOverModal();
+      }
+    }
+    return;
+  }
+
+  if (ballBottom >= bottomLimit) {
     ball.dy *= -1;
-    ball.y = canvasHeight - ball.radius;
+    ball.y = bottomLimit - ball.radius;
   }
 }
 

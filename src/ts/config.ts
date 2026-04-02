@@ -66,4 +66,7 @@ export const featureConfig = {
   showStars: true,
   useBonusBricks: true,
   enableSound: true,
+  enableDeath: true,
+  maxLives: 3,
+  deathBoundaryOffset: 30,
 };
