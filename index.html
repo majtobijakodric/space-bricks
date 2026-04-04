@@ -17,11 +17,6 @@
           <div id="livesText" class="flex items-center gap-1" aria-label="Lives"></div>
 
           <div class="flex flex-wrap items-center justify-end gap-2">
-            <p id="scoreText"
-              class="rounded-md border border-slate-700 bg-slate-900 px-3 py-1.5 text-sm font-medium text-white shadow">
-              Score: 0
-            </p>
-
             <p id="modeText"
               class="rounded-md border border-slate-700 bg-slate-900 px-3 py-1.5 text-sm font-medium text-white shadow">
               Mode: Medium
@@ -52,8 +47,16 @@
         </div>
       </div>
 
-      <canvas id="gameCanvas" width="800" height="600"
-        class="block rounded-lg border border-slate-700 shadow-2xl"></canvas>
+      <div class="flex flex-col items-center gap-4 lg:flex-row lg:items-stretch">
+        <canvas id="gameCanvas" width="800" height="600"
+          class="block rounded-lg border border-slate-700 shadow-2xl"></canvas>
+
+        <div class="flex flex-col items-center justify-center rounded-xl border border-slate-700/80 bg-slate-950/70 px-3 py-4 shadow-xl lg:mt-0 lg:self-stretch">
+          <div class="flex h-full min-h-[600px] w-8 items-end overflow-hidden rounded-full border border-slate-600 bg-slate-900 p-1">
+            <div id="fuelTankFill" class="h-full w-full rounded-full bg-emerald-400 shadow-[0_0_18px_rgba(74,222,128,0.5)]"></div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <script type="module" src="./src/ts/main.ts"></script>

@@ -12,7 +12,6 @@ import {
   lives,
 } from './gameState.ts';
 import { playBrickHitSound, playHeartLoseSound } from './sound.ts';
-import { updateScore } from './scoring.ts';
 import { showGameOverModal, updateLivesText } from './ui.ts';
 import { pad } from './gameState.ts';
 
@@ -158,7 +157,6 @@ export function handleBrickCollisions() {
     bounceBallOffBrick(brick);
     playBrickHitSound();
     removeBrickAtIndex(index);
-    updateScore(brick.points);
     return;
   }
 }

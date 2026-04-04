@@ -1,4 +1,4 @@
-import { brickLayoutConfig, canvasConfig, colorConfig, featureConfig } from './config.ts';
+import { barConfig, brickLayoutConfig, canvasConfig, colorConfig, featureConfig } from './config.ts';
 
 export let canvasHeight = canvasConfig.height;
 export let canvasWidth = canvasConfig.width;
@@ -15,6 +15,8 @@ export let isPaused = false;
 export let isGameOver = false;
 export let lives = featureConfig.maxLives;
 export let hasHandledBottomMiss = false;
+export let barElapsedMs = 0;
+export const barDurationMs = barConfig.drainDurationSeconds * 1000;
 
 export const pad = {
   x: canvasWidth / 2 - 25,
@@ -89,6 +91,14 @@ export function resetBottomMissState() {
 
 export function markBottomMissHandled() {
   hasHandledBottomMiss = true;
+}
+
+export function resetBarTimer() {
+  barElapsedMs = 0;
+}
+
+export function addBarElapsedTime(deltaMs: number) {
+  barElapsedMs = Math.min(barDurationMs, barElapsedMs + deltaMs);
 }
 
 export function setBallVelocity(x: number, y: number) {

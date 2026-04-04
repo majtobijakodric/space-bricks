@@ -18,16 +18,15 @@ export type Brick = {
   shapeIndex: number;
   material: AsteroidMaterial;
   textureVariant: number;
-  points: number;
 };
 
 export let bricks: Brick[] = [];
 
-const MATERIAL_RARITIES: Array<{ material: AsteroidMaterial; weight: number; points: number }> = [
-  { material: 'red', weight: 4, points: 5 },
-  { material: 'silver', weight: 8, points: 3 },
-  { material: 'iron', weight: 18, points: 2 },
-  { material: 'rock', weight: 70, points: 1 },
+const MATERIAL_RARITIES: Array<{ material: AsteroidMaterial; weight: number }> = [
+  { material: 'red', weight: 4 },
+  { material: 'silver', weight: 8 },
+  { material: 'iron', weight: 18 },
+  { material: 'rock', weight: 70 },
 ];
 
 function randomShapeIndex() {
@@ -74,7 +73,6 @@ export function initializeBricks() {
         shapeIndex: randomShapeIndex(),
         material: material.material,
         textureVariant: randomTextureVariant(),
-        points: material.points,
       });
     }
   }

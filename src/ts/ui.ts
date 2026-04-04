@@ -12,9 +12,9 @@ const swalTheme = {
 };
 
 const livesText = document.querySelector<HTMLDivElement>('#livesText');
-const scoreText = document.querySelector<HTMLParagraphElement>('#scoreText');
 const modeText = document.querySelector<HTMLParagraphElement>('#modeText');
 const pauseButton = document.querySelector<HTMLButtonElement>('#pauseButton');
+const fuelTankFill = document.querySelector<HTMLDivElement>('#fuelTankFill');
 let gameOverShown = false;
 
 function createHeart(active: boolean) {
@@ -22,15 +22,6 @@ function createHeart(active: boolean) {
   wrapper.className = active ? 'text-rose-400' : 'text-slate-500/40';
   wrapper.append(createElement(Heart, { width: 18, height: 18, fill: 'currentColor', strokeWidth: 1.75 }));
   return wrapper;
-}
-
-// Updates the score text.
-export function updateScoreText(score: number) {
-  if (!scoreText) {
-    return;
-  }
-
-  scoreText.textContent = `Score: ${score}`;
 }
 
 // Updates the mode text.
@@ -63,12 +54,21 @@ export function updatePauseButtonText(isPaused: boolean) {
   pauseButton.setAttribute('aria-label', pauseButton.title);
 }
 
+export function updateFuelTankLevel(remainingRatio: number) {
+  if (!fuelTankFill) {
+    return;
+  }
+
+  const clampedRatio = Math.max(0, Math.min(1, remainingRatio));
+  fuelTankFill.style.height = `${clampedRatio * 100}%`;
+}
+
 // Sets the first UI values.
 export function initializeUi() {
-  updateScoreText(0);
   updateModeText(modeConfig.defaultMode);
   updatePauseButtonText(false);
   updateLivesText(lives);
+  updateFuelTankLevel(1);
 }
 
 export async function showGameOverModal() {

@@ -62,6 +62,10 @@ export const soundConfig = {
   buttonClick: 'button-click.mp3',
 };
 
+export const barConfig = {
+  drainDurationSeconds: 40,
+};
+
 export const featureConfig = {
   useBonusBricks: true,
   enableSound: true,
