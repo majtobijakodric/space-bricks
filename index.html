@@ -14,7 +14,7 @@
     <div class="mx-auto flex w-fit flex-col items-center gap-4">
       <div class="w-full rounded-xl border border-slate-700/80 bg-slate-950/70 p-4 shadow-xl">
         <div class="flex items-center justify-between gap-4">
-          <div class="flex flex-wrap items-center justify-end gap-2">
+          <div class="flex flex-wrap items-center gap-2">
             <p id="modeText"
               class="rounded-md border border-slate-700 bg-slate-900 px-3 py-1.5 text-sm font-medium text-white shadow">
               Mode: Medium
@@ -36,6 +36,20 @@
 
             <button id="aboutButton" type="button"
               class="rounded-md bg-slate-800 px-3 py-1.5 text-sm font-medium text-white shadow">
+            </button>
+          </div>
+
+          <div class="ability-menu flex items-center gap-2 self-stretch">
+            <p id="abilityMessage" class="ability-message" aria-live="polite"></p>
+
+            <button id="redAbilityButton" type="button" class="ability-button" aria-label="Activate red rock ability">
+              <img id="redAbilityIcon" class="ability-icon" alt="Red rock ability icon" />
+              <span id="redAbilityCount" class="ability-count" aria-hidden="true"></span>
+            </button>
+
+            <button id="blueAbilityButton" type="button" class="ability-button" aria-label="Activate blue rock ability">
+              <img id="blueAbilityIcon" class="ability-icon" alt="Blue rock ability icon" />
+              <span id="blueAbilityCount" class="ability-count" aria-hidden="true"></span>
             </button>
           </div>
         </div>

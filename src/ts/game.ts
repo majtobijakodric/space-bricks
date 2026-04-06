@@ -1,5 +1,6 @@
 import { featureConfig, canvasConfig, asteroidLayoutConfig } from './config.ts';
 import { gameCanvas } from './canvas.ts';
+import { resetAbilitySystem } from './abilities.ts';
 import {
   handleAsteroidCollisions,
   handlePadCollision,
@@ -48,6 +49,21 @@ export const rocket = {
   dy: 0,
 };
 
+let basePadSpeed = pad.speed;
+let baseRocketSpeed = rocket.speed;
+let basePadWidth = pad.width;
+let fuelPauseActive = false;
+let fuelDrainMultiplier = 1;
+let padSpeedMultiplier = 1;
+let rocketSpeedMultiplier = 1;
+let padWidthMultiplier = 1;
+
+let fuelPauseTimeoutId: ReturnType<typeof setTimeout> | null = null;
+let fuelDrainTimeoutId: ReturnType<typeof setTimeout> | null = null;
+let padSpeedTimeoutId: ReturnType<typeof setTimeout> | null = null;
+let rocketSpeedTimeoutId: ReturnType<typeof setTimeout> | null = null;
+let padWidthTimeoutId: ReturnType<typeof setTimeout> | null = null;
+
 export const input = {
   left: false,
   right: false,
@@ -81,6 +97,10 @@ export function loseFuel(amount = 1) {
   fuel = Math.max(0, fuel - amount);
 }
 
+export function addFuel(amount: number) {
+  fuel = Math.max(0, Math.min(featureConfig.maxFuel, fuel + amount));
+}
+
 export function resetFuel() {
   fuel = featureConfig.maxFuel;
 }
@@ -91,6 +111,123 @@ export function resetBottomMissState() {
 
 export function setRocketLaunched(value: boolean) {
   isRocketLaunched = value;
+}
+
+export function setBasePadSpeed(speed: number) {
+  basePadSpeed = speed;
+  syncPadSpeed();
+}
+
+export function setBaseRocketSpeed(speed: number) {
+  baseRocketSpeed = speed;
+  syncRocketSpeed();
+}
+
+function clearEffectTimer(timeoutId: ReturnType<typeof setTimeout> | null) {
+  if (timeoutId !== null) {
+    clearTimeout(timeoutId);
+  }
+}
+
+function syncRocketVelocityToSpeed() {
+  if (!isRocketLaunched) {
+    rocket.dx = 0;
+    rocket.dy = -rocket.speed;
+    return;
+  }
+
+  const angle = Math.atan2(rocket.dy, rocket.dx);
+  rocket.dx = Math.cos(angle) * rocket.speed;
+  rocket.dy = Math.sin(angle) * rocket.speed;
+}
+
+function syncPadSpeed() {
+  pad.speed = Math.max(1, basePadSpeed * padSpeedMultiplier);
+}
+
+function syncPadWidth() {
+  pad.width = Math.max(36, basePadWidth * padWidthMultiplier);
+  pad.x = Math.max(0, Math.min(canvasWidth - pad.width, pad.x));
+}
+
+function syncRocketSpeed() {
+  rocket.speed = Math.max(1, baseRocketSpeed * rocketSpeedMultiplier);
+  syncRocketVelocityToSpeed();
+}
+
+export function applyFuelPause(durationMs: number) {
+  fuelPauseActive = true;
+  clearEffectTimer(fuelPauseTimeoutId);
+  fuelPauseTimeoutId = setTimeout(() => {
+    fuelPauseActive = false;
+    fuelPauseTimeoutId = null;
+  }, durationMs);
+}
+
+export function applyFuelDrainMultiplier(multiplier: number, durationMs: number) {
+  fuelDrainMultiplier = multiplier;
+  clearEffectTimer(fuelDrainTimeoutId);
+  fuelDrainTimeoutId = setTimeout(() => {
+    fuelDrainMultiplier = 1;
+    fuelDrainTimeoutId = null;
+  }, durationMs);
+}
+
+export function applyPadSpeedMultiplier(multiplier: number, durationMs: number) {
+  padSpeedMultiplier = multiplier;
+  syncPadSpeed();
+  clearEffectTimer(padSpeedTimeoutId);
+  padSpeedTimeoutId = setTimeout(() => {
+    padSpeedMultiplier = 1;
+    syncPadSpeed();
+    padSpeedTimeoutId = null;
+  }, durationMs);
+}
+
+export function applyPadWidthMultiplier(multiplier: number, durationMs: number) {
+  padWidthMultiplier = multiplier;
+  syncPadWidth();
+  clearEffectTimer(padWidthTimeoutId);
+  padWidthTimeoutId = setTimeout(() => {
+    padWidthMultiplier = 1;
+    syncPadWidth();
+    padWidthTimeoutId = null;
+  }, durationMs);
+}
+
+export function applyRocketSpeedMultiplier(multiplier: number, durationMs: number) {
+  rocketSpeedMultiplier = multiplier;
+  syncRocketSpeed();
+  clearEffectTimer(rocketSpeedTimeoutId);
+  rocketSpeedTimeoutId = setTimeout(() => {
+    rocketSpeedMultiplier = 1;
+    syncRocketSpeed();
+    rocketSpeedTimeoutId = null;
+  }, durationMs);
+}
+
+export function clearGameplayEffects() {
+  fuelPauseActive = false;
+  fuelDrainMultiplier = 1;
+  padSpeedMultiplier = 1;
+  rocketSpeedMultiplier = 1;
+  padWidthMultiplier = 1;
+
+  clearEffectTimer(fuelPauseTimeoutId);
+  clearEffectTimer(fuelDrainTimeoutId);
+  clearEffectTimer(padSpeedTimeoutId);
+  clearEffectTimer(rocketSpeedTimeoutId);
+  clearEffectTimer(padWidthTimeoutId);
+
+  fuelPauseTimeoutId = null;
+  fuelDrainTimeoutId = null;
+  padSpeedTimeoutId = null;
+  rocketSpeedTimeoutId = null;
+  padWidthTimeoutId = null;
+
+  syncPadSpeed();
+  syncPadWidth();
+  syncRocketSpeed();
 }
 
 export function markBottomMissHandled() {
@@ -114,6 +251,7 @@ export function restartGame() {
   input.left = false;
   input.right = false;
 
+  resetAbilitySystem();
   resetFuel();
   resetBottomMissState();
   resetPadPosition();
@@ -168,7 +306,9 @@ function animateFrame(timestamp: number) {
   lastActiveTimestamp = timestamp;
 
   if (deltaMs > 0) {
-    loseFuel((deltaMs / 1000) * featureConfig.fuelBurnPerSecond);
+    if (!fuelPauseActive) {
+      loseFuel((deltaMs / 1000) * featureConfig.fuelBurnPerSecond * fuelDrainMultiplier);
+    }
   }
 
   if (input.left) {

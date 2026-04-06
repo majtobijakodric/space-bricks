@@ -1,10 +1,11 @@
 import Swal from 'sweetalert2';
 import { createElement, Info, Pause, Play } from 'lucide';
 
-import { aboutButton, padSpeedButton, pauseButton, rocketSpeedButton } from './canvas.ts';
-import { modeConfig } from './config.ts';
+import { activateAbility, getAbilityIconSource, getAbilityState, subscribeToAbilityState } from './abilities.ts';
+import { abilityMessage, aboutButton, blueAbilityButton, blueAbilityCount, blueAbilityIcon, padSpeedButton, pauseButton, redAbilityButton, redAbilityCount, redAbilityIcon, rocketSpeedButton } from './canvas.ts';
+import { featureConfig, modeConfig } from './config.ts';
 import { launchRocketFromPad, movePadBy, setPadSpeed, setRocketSpeed } from './entities.ts';
-import { input, isGameOver, isPaused, pad, pauseGame, restartGame, resumeGame, rocket, isRocketLaunched } from './game.ts';
+import { fuel, input, isGameOver, isPaused, pad, pauseGame, restartGame, resumeGame, rocket, isRocketLaunched } from './game.ts';
 import { renderScene } from './render.ts';
 
 const swalTheme = {
@@ -18,6 +19,52 @@ const fuelTankFill = document.querySelector<HTMLDivElement>('#fuelTankFill');
 
 let gameOverShown = false;
 let listenersBound = false;
+
+function updateAbilityUi() {
+  const state = getAbilityState();
+
+  if (abilityMessage) {
+    abilityMessage.textContent = state.message;
+    abilityMessage.classList.toggle('is-visible', state.message.length > 0);
+  }
+
+  const slots = [
+    { button: redAbilityButton, count: redAbilityCount, icon: redAbilityIcon, color: 'red' as const },
+    { button: blueAbilityButton, count: blueAbilityCount, icon: blueAbilityIcon, color: 'blue' as const },
+  ];
+
+  slots.forEach(({ button, count, icon, color }) => {
+    const slot = state.slots[color];
+    const hasCharges = slot.charges > 0;
+
+    if (icon) {
+      icon.src = getAbilityIconSource(color);
+    }
+
+    if (count) {
+      count.textContent = String(slot.charges);
+      count.classList.toggle('is-visible', hasCharges);
+    }
+
+    if (!button) {
+      return;
+    }
+
+    button.disabled = !hasCharges;
+    button.classList.toggle('is-charged', hasCharges);
+    button.classList.toggle('is-clickable', hasCharges);
+    button.classList.toggle('is-pulsing', slot.pulsing);
+  });
+}
+
+function handleAbilityActivation(color: 'red' | 'blue') {
+  if (!activateAbility(color)) {
+    return;
+  }
+
+  updateFuelTankLevel(fuel / featureConfig.maxFuel);
+  renderScene();
+}
 
 function renderAboutButtonIcon(button: HTMLButtonElement) {
   button.replaceChildren(createElement(Info, { width: 18, height: 18 }));
@@ -107,6 +154,23 @@ export function initializeUi() {
   updateModeText(modeConfig.defaultMode);
   updatePauseButtonText(false);
   updateFuelTankLevel(1);
+  updateAbilityUi();
+
+  if (redAbilityButton && redAbilityIcon) {
+    redAbilityIcon.src = getAbilityIconSource('red');
+    redAbilityButton.addEventListener('click', () => {
+      handleAbilityActivation('red');
+    });
+  }
+
+  if (blueAbilityButton && blueAbilityIcon) {
+    blueAbilityIcon.src = getAbilityIconSource('blue');
+    blueAbilityButton.addEventListener('click', () => {
+      handleAbilityActivation('blue');
+    });
+  }
+
+  subscribeToAbilityState(updateAbilityUi);
 
   if (aboutButton) {
     renderAboutButtonIcon(aboutButton);

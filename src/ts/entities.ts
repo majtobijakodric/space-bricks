@@ -24,7 +24,8 @@ import rockRed5Url from '../assets/rocks/red/rock_5.png';
 import rockRed6Url from '../assets/rocks/red/rock_6.png';
 
 import { featureConfig, rockSpriteConfig } from './config.ts';
-import { ASTEROID_AREA_OFFSET_X, ASTEROID_AREA_OFFSET_Y, cell, canvasHeight, canvasWidth, columns, fuel, hasHandledBottomMiss, isRocketLaunched, loseFuel, markBottomMissHandled, pad, resetBottomMissState, rocket, rows, setGameOver, setRocketLaunched } from './game.ts';
+import { ASTEROID_AREA_OFFSET_X, ASTEROID_AREA_OFFSET_Y, addFuel, cell, canvasHeight, canvasWidth, columns, fuel, hasHandledBottomMiss, isRocketLaunched, loseFuel, markBottomMissHandled, pad, resetBottomMissState, rocket, rows, setBasePadSpeed, setBaseRocketSpeed, setGameOver, setRocketLaunched } from './game.ts';
+import { chargeAbility } from './abilities.ts';
 import { showGameOverModal, updateFuelTankLevel } from './ui.ts';
 
 type RockSpriteColor = keyof typeof rockSpriteConfig.weights;
@@ -120,17 +121,7 @@ export function launchRocketFromPad() {
 }
 
 export function setRocketSpeed(speed: number) {
-  rocket.speed = speed;
-
-  if (!isRocketLaunched) {
-    rocket.dx = 0;
-    rocket.dy = -rocket.speed;
-    return;
-  }
-
-  const angle = Math.atan2(rocket.dy, rocket.dx);
-  rocket.dx = Math.cos(angle) * rocket.speed;
-  rocket.dy = Math.sin(angle) * rocket.speed;
+  setBaseRocketSpeed(speed);
 }
 
 export function updateRocketPosition() {
@@ -151,7 +142,7 @@ export function movePadBy(x: number) {
 }
 
 export function setPadSpeed(speed: number) {
-  pad.speed = speed;
+  setBasePadSpeed(speed);
 }
 
 export function resetPadPosition() {
@@ -321,6 +312,16 @@ export function handleAsteroidCollisions() {
     }
 
     bounceRocketOffAsteroid(asteroid);
+
+    if (asteroid.spriteColor === 'red' || asteroid.spriteColor === 'blue') {
+      chargeAbility(asteroid.spriteColor);
+    }
+
+    if (asteroid.spriteColor === 'gray') {
+      addFuel(1);
+      updateFuelTankLevel(fuel / featureConfig.maxFuel);
+    }
+
     removeAsteroidAtIndex(index);
     return;
   }
