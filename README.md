@@ -57,7 +57,6 @@ src/
     asteroidShapes.ts    # Base shapes used for asteroid bricks
     asteroidTextures.ts  # Procedural asteroid texture rendering
     render.ts            # Canvas drawing for the scene
-    background.ts        # Random space backdrop and planet placement
     buttons.ts           # Pause and About button behavior
     events.ts            # Keyboard input listeners
     scoring.ts           # Score tracking and UI updates
@@ -72,17 +71,15 @@ package.json             # Scripts and dependencies
 
 ### Notes
 
-- The game boots from `src/ts/main.ts`, which initializes the background, bricks, UI, and loop.
+- The game boots from `src/ts/main.ts`, which initializes the bricks, UI, and loop.
 - Brick visuals are generated procedurally from shape data and seeded textures, so the board feels varied each run.
-- The background system picks a random space image and places decorative planets around the canvas.
+- The game uses a static space background image defined in `src/style/style.css`.
 - The pause button clears held input so the paddle does not keep moving after resume.
 - The repository is configured for GitHub Pages with the `/the-bricks/` base path in `vite.config.ts`.
 - Difficulty presets exist in `src/ts/config.ts`, but the current UI only displays the default mode.
 
 ### Textures
  [Asteroids](https://dustdfg.itch.io/pixel-art-top-down-rocks-pack?download)
- <br>
- [Planets planets](https://deep-fold.itch.io/pixel-planet-generator)
  <br>
  [Pixel space](https://deep-fold.itch.io/space-background-generator)
 

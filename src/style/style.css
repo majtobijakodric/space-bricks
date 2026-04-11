@@ -15,31 +15,13 @@ body {
 body {
   font-family: "Orbitron", "Space Nova", "JetBrains Mono", monospace;
   margin: 0;
-  background: black;
-  color: white;
-}
-
-body.has-game-background {
   background-color: #050816;
+  background-image: url("../assets/background/Space_Background.png");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+  color: white;
   overflow: hidden;
-}
-
-#backgroundPlanets {
-  pointer-events: none;
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-}
-
-.background-planet {
-  position: fixed;
-  display: block;
-  object-fit: contain;
-  filter: drop-shadow(0 10px 24px rgb(0 0 0 / 45%));
-  user-select: none;
 }
 
 #app {
@@ -99,6 +81,15 @@ body.has-game-background {
   transform: translateY(-1px);
 }
 
+.control-button {
+  cursor: pointer;
+  transition: transform 120ms ease;
+}
+
+.control-button:hover {
+  transform: translateY(-1px);
+}
+
 .ability-button:disabled {
   cursor: default;
 }
@@ -108,8 +99,9 @@ body.has-game-background {
 }
 
 .ability-button.is-charged {
-  border-color: rgb(251 191 36 / 0.9);
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.1), 0 0 0 1px rgb(251 191 36 / 0.15), 0 0 18px rgb(250 204 21 / 0.38);
+  border-color: rgb(226 232 240 / 0.92);
+  background: linear-gradient(180deg, rgb(51 65 85 / 0.98), rgb(15 23 42 / 0.98));
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.16), 0 0 0 1px rgb(255 255 255 / 0.12), 0 0 14px rgb(255 255 255 / 0.14);
 }
 
 .ability-button.is-pulsing {
@@ -131,7 +123,7 @@ body.has-game-background {
 }
 
 .ability-button.is-charged .ability-icon {
-  filter: grayscale(0) saturate(1.1) brightness(1.05) drop-shadow(0 0 8px rgb(255 255 255 / 0.18));
+  filter: grayscale(0.1) saturate(0.35) brightness(1.22) contrast(0.94) drop-shadow(0 0 6px rgb(255 255 255 / 0.16));
 }
 
 .ability-count {
@@ -144,14 +136,14 @@ body.has-game-background {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgb(255 255 255 / 0.16);
+  border: 1px solid rgb(239 68 68 / 0.95);
   border-radius: 999px;
-  background: linear-gradient(180deg, rgb(248 113 113), rgb(220 38 38));
+  background: rgb(220 38 38);
   color: white;
   font-size: 0.65rem;
   font-weight: 700;
   line-height: 1;
-  box-shadow: 0 6px 14px rgb(2 6 23 / 0.35);
+  box-shadow: 0 6px 14px rgb(2 6 23 / 0.28);
   opacity: 0;
   transform: scale(0.85);
   transition: opacity 140ms ease, transform 140ms ease;
@@ -165,14 +157,14 @@ body.has-game-background {
 
 @keyframes ability-charge-pulse {
   0% {
-    transform: scale(1);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.14), 0 0 0 1px rgb(255 255 255 / 0.08), 0 0 0 rgb(255 255 255 / 0);
   }
 
   45% {
-    transform: scale(1.08);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.22), 0 0 0 1px rgb(255 255 255 / 0.2), 0 0 16px rgb(255 255 255 / 0.22);
   }
 
   100% {
-    transform: scale(1);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.16), 0 0 0 1px rgb(255 255 255 / 0.12), 0 0 14px rgb(255 255 255 / 0.14);
   }
 }

@@ -1,5 +1,4 @@
 import '../style/style.css';
-import { initializeBackground } from './background.ts';
 import { initializeAsteroids, resetRocketLaunchState } from './entities.ts';
 import { gameCanvas, setupCanvasSize } from './canvas.ts';
 import { resetPadPosition } from './entities.ts';
@@ -13,7 +12,6 @@ if (gameCanvas) {
   setupCanvasSize();
   resetPadPosition();
   resetRocketLaunchState();
-  initializeBackground();
   initializeAsteroids();
   renderScene();
   startGameLoop();
