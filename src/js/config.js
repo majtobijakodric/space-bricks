@@ -1,17 +1,14 @@
-// Main game settings.
-// Keep easy-to-edit values here.
-
 export const canvasConfig = {
   width: 800,
   height: 600,
-};
+}
 
 export const colorConfig = {
   rocket: 'red',
   pad: 'blue',
   background: 'lightgray',
   asteroid: 'green',
-};
+}
 
 export const asteroidLayoutConfig = {
   offsetX: 18,
@@ -25,7 +22,7 @@ export const asteroidLayoutConfig = {
     marginTop: 3,
     padding: 1,
   },
-};
+}
 
 export const modeConfig = {
   defaultMode: 'medium',
@@ -51,7 +48,7 @@ export const modeConfig = {
       speedMultiplier: 0,
     },
   },
-} as const;
+}
 
 export const featureConfig = {
   useBonusAsteroids: true,
@@ -59,7 +56,7 @@ export const featureConfig = {
   maxFuel: 5,
   fuelBurnPerSecond: 0.1,
   deathBoundaryOffset: 80,
-};
+}
 
 export const rockSpriteConfig = {
   weights: {
@@ -68,8 +65,8 @@ export const rockSpriteConfig = {
     blue: 8,
     red: 4,
   },
-} as const;
+}
 
 export const rocketSpriteConfig = {
   sizeMultiplier: 6,
-} as const;
+}
