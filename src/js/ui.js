@@ -29,9 +29,25 @@ function getStoredScores() {
 
   try {
     const parsedScores = JSON.parse(rawScores)
-    return Array.isArray(parsedScores)
-      ? parsedScores.filter((score) => Number.isFinite(score)).map((score) => Number(score))
-      : []
+
+    if (!Array.isArray(parsedScores)) {
+      return []
+    }
+
+    return parsedScores.flatMap((entry) => {
+      if (Number.isFinite(entry)) {
+        return [{ score: Number(entry), timestamp: null }]
+      }
+
+      if (!entry || typeof entry !== 'object' || !Number.isFinite(entry.score)) {
+        return []
+      }
+
+      return [{
+        score: Number(entry.score),
+        timestamp: Number.isFinite(entry.timestamp) ? Number(entry.timestamp) : null,
+      }]
+    })
   } catch {
     return []
   }
@@ -39,8 +55,28 @@ function getStoredScores() {
 
 function saveScore(score) {
   const scores = getStoredScores()
-  scores.unshift(score)
+  scores.unshift({ score, timestamp: Date.now() })
   localStorage.setItem(scoreHistoryStorageKey, JSON.stringify(scores))
+}
+
+function formatRunTimestamp(timestamp) {
+  if (!timestamp) {
+    return 'Unknown date'
+  }
+
+  const date = new Date(timestamp)
+
+  if (Number.isNaN(date.getTime())) {
+    return 'Unknown date'
+  }
+
+  const day = String(date.getDate()).padStart(2, '0')
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const year = date.getFullYear()
+  const hours = String(date.getHours()).padStart(2, '0')
+  const minutes = String(date.getMinutes()).padStart(2, '0')
+
+  return `${hours}:${minutes} ${day}.${month}.${year}`
 }
 
 function renderScoreHistoryMarkup() {
@@ -56,10 +92,13 @@ function renderScoreHistoryMarkup() {
   }
 
   const scoreItems = previousScores
-    .map((score, index) => `
+    .map((run, index) => `
       <li class="score-history-item">
-        <span>Run ${index + 1}</span>
-        <strong>${score}</strong>
+        <div class="score-history-copy">
+          <span>Run ${index + 1}</span>
+          <span class="score-history-date">${formatRunTimestamp(run.timestamp)}</span>
+        </div>
+        <strong>${run.score}</strong>
       </li>
     `)
     .join('')
@@ -479,6 +518,7 @@ export async function showGameOverModal() {
     text: 'Play again to restart.',
     icon: 'error',
     confirmButtonText: 'Play again',
+    showCloseButton: false,
     allowOutsideClick: false,
     allowEscapeKey: false,
     ...swalTheme,

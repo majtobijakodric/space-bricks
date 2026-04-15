@@ -171,6 +171,17 @@ body {
   background: linear-gradient(180deg, rgb(30 41 59 / 0.96), rgb(15 23 42 / 0.96));
 }
 
+.score-history-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.score-history-date {
+  color: rgb(148 163 184);
+  font-size: 0.72rem;
+}
+
 .score-history-item + .score-history-item {
   margin-top: 0.6rem;
 }
