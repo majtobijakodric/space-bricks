@@ -125,6 +125,39 @@ body {
   box-shadow: 0 0 0 1px rgb(216 180 254 / 0.28), 0 0 18px rgb(168 85 247 / 0.2);
 }
 
+.score-history-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.score-history-list {
+  max-height: 240px;
+  overflow-y: auto;
+  padding-right: 0.35rem;
+}
+
+.score-history-list ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.score-history-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid rgb(71 85 105 / 0.8);
+  border-radius: 0.75rem;
+  background: linear-gradient(180deg, rgb(30 41 59 / 0.96), rgb(15 23 42 / 0.96));
+}
+
+.score-history-item + .score-history-item {
+  margin-top: 0.6rem;
+}
+
 .ability-button:disabled {
   cursor: default;
 }

@@ -1,10 +1,10 @@
 import Swal from 'sweetalert2'
 import { CircleHelp, createElement, Info, Pause, Play } from 'lucide'
 import { activateAbility, getAbilityIconSource, getAbilityState, subscribeToAbilityState } from './abilities.js'
-import { abilityMessage, aboutButton, blueAbilityButton, blueAbilityCount, blueAbilityIcon, howToPlayButton, modeButton, padSpeedButton, pauseButton, redAbilityButton, redAbilityCount, redAbilityIcon, rocketSpeedButton } from './canvas.js'
+import { abilityMessage, aboutButton, blueAbilityButton, blueAbilityCount, blueAbilityIcon, currentScoreButton, howToPlayButton, modeButton, padSpeedButton, pauseButton, redAbilityButton, redAbilityCount, redAbilityIcon, rocketSpeedButton } from './canvas.js'
 import { featureConfig, modeConfig } from './config.js'
 import { launchRocketFromPad, movePadBy, setPadSpeed, setRocketSpeed } from './entities.js'
-import { fuel, input, isGameOver, isPaused, isRocketLaunched, pad, pauseGame, restartGame, resumeGame, rocket } from './game.js'
+import { currentScore, fuel, input, isGameOver, isPaused, isRocketLaunched, pad, pauseGame, restartGame, resumeGame, rocket } from './game.js'
 import { renderScene } from './render.js'
 
 const swalTheme = {
@@ -14,10 +14,83 @@ const swalTheme = {
 }
 
 const fuelTankFill = document.querySelector('#fuelTankFill')
+const scoreHistoryStorageKey = 'the-bricks-score-history'
 
 let gameOverShown = false
 let listenersBound = false
 let currentMode = modeConfig.defaultMode
+
+function getStoredScores() {
+  const rawScores = localStorage.getItem(scoreHistoryStorageKey)
+
+  if (!rawScores) {
+    return []
+  }
+
+  try {
+    const parsedScores = JSON.parse(rawScores)
+    return Array.isArray(parsedScores)
+      ? parsedScores.filter((score) => Number.isFinite(score)).map((score) => Number(score))
+      : []
+  } catch {
+    return []
+  }
+}
+
+function saveScore(score) {
+  const scores = getStoredScores()
+  scores.unshift(score)
+  localStorage.setItem(scoreHistoryStorageKey, JSON.stringify(scores))
+}
+
+function renderScoreHistoryMarkup() {
+  const previousScores = getStoredScores()
+
+  if (previousScores.length === 0) {
+    return `
+      <div class="score-history-panel text-left text-sm leading-6">
+        <p class="mb-3">Current score: <strong>${currentScore}</strong></p>
+        <p>You haven't played this game yet.</p>
+      </div>
+    `
+  }
+
+  const scoreItems = previousScores
+    .map((score, index) => `
+      <li class="score-history-item">
+        <span>Run ${index + 1}</span>
+        <strong>${score}</strong>
+      </li>
+    `)
+    .join('')
+
+  return `
+    <div class="score-history-panel text-left text-sm leading-6">
+      <p class="mb-3">Current score: <strong>${currentScore}</strong></p>
+      <div class="score-history-list" role="region" aria-label="Previous scores">
+        <ol>${scoreItems}</ol>
+      </div>
+    </div>
+  `
+}
+
+async function openScoreMenu() {
+  const wasPaused = isPaused
+  pauseGame()
+  syncPauseButtonUi(true)
+
+  await Swal.fire({
+    title: 'Current Score',
+    html: renderScoreHistoryMarkup(),
+    confirmButtonText: 'Close',
+    ...swalTheme,
+  })
+
+  if (!wasPaused) {
+    resumeGame()
+    syncPauseButtonUi(false)
+  }
+}
 
 function updateExperimentalControls() {
   const isExperimental = currentMode === 'experimental'
@@ -97,6 +170,14 @@ function renderPauseButtonIcon(button, paused) {
   button.replaceChildren(createElement(paused ? Play : Pause, { width: 18, height: 18 }))
   button.title = paused ? 'Resume' : 'Pause'
   button.setAttribute('aria-label', button.title)
+}
+
+export function syncPauseButtonUi(paused = isPaused) {
+  if (!pauseButton) {
+    return
+  }
+
+  renderPauseButtonIcon(pauseButton, paused)
 }
 
 function applyMode(mode) {
@@ -223,6 +304,7 @@ function bindKeyboardListeners() {
 export function initializeUi() {
   applyMode(modeConfig.defaultMode)
   updatePauseButtonText(false)
+  syncPauseButtonUi(false)
   updateFuelTankLevel(1)
   updateAbilityUi()
 
@@ -254,6 +336,7 @@ export function initializeUi() {
     aboutButton.addEventListener('click', async () => {
       const wasPaused = isPaused
       pauseGame()
+      syncPauseButtonUi(true)
 
       await Swal.fire({
         title: 'About',
@@ -267,6 +350,7 @@ export function initializeUi() {
 
       if (!wasPaused) {
         resumeGame()
+        syncPauseButtonUi(false)
       }
     })
   }
@@ -277,6 +361,7 @@ export function initializeUi() {
     howToPlayButton.addEventListener('click', async () => {
       const wasPaused = isPaused
       pauseGame()
+      syncPauseButtonUi(true)
 
       await Swal.fire({
         title: 'How to Play',
@@ -294,7 +379,14 @@ export function initializeUi() {
 
       if (!wasPaused) {
         resumeGame()
+        syncPauseButtonUi(false)
       }
+    })
+  }
+
+  if (currentScoreButton) {
+    currentScoreButton.addEventListener('click', () => {
+      void openScoreMenu()
     })
   }
 
@@ -306,10 +398,10 @@ export function initializeUi() {
     button.addEventListener('click', () => {
       if (isPaused) {
         resumeGame()
-        renderPauseButtonIcon(button, false)
+        syncPauseButtonUi(false)
       } else {
         pauseGame()
-        renderPauseButtonIcon(button, true)
+        syncPauseButtonUi(true)
       }
     })
   }
@@ -370,6 +462,7 @@ export async function showGameOverModal() {
   }
 
   gameOverShown = true
+  saveScore(currentScore)
 
   await Swal.fire({
     title: 'You are out of fuel.',

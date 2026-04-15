@@ -12,6 +12,7 @@ export const blueAbilityCount = document.querySelector('#blueAbilityCount')
 export const pauseButton = document.querySelector('#pauseButton')
 export const howToPlayButton = document.querySelector('#howToPlayButton')
 export const modeButton = document.querySelector('#modeButton')
+export const currentScoreButton = document.querySelector('#currentScoreButton')
 export const rocketSpeedButton = document.querySelector('#rocketSpeedButton')
 export const padSpeedButton = document.querySelector('#padSpeedButton')
 

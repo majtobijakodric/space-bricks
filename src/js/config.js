@@ -59,11 +59,12 @@ export const featureConfig = {
 }
 
 export const rockSpriteConfig = {
+  // % of rocks
   weights: {
-    normal: 70,
+    normal: 60,
     gray: 18,
-    blue: 8,
-    red: 4,
+    blue: 14,
+    red: 8,
   },
 }
 

@@ -24,7 +24,7 @@ import rockRed5Url from '../assets/rocks/red/rock_5.png'
 import rockRed6Url from '../assets/rocks/red/rock_6.png'
 
 import { featureConfig, rockSpriteConfig } from './config.js'
-import { ASTEROID_AREA_OFFSET_X, ASTEROID_AREA_OFFSET_Y, addFuel, canvasHeight, canvasWidth, cell, columns, fuel, hasHandledBottomMiss, isRocketLaunched, loseFuel, markBottomMissHandled, pad, resetBottomMissState, rocket, rows, setBasePadSpeed, setBaseRocketSpeed, setGameOver, setRocketLaunched } from './game.js'
+import { ASTEROID_AREA_OFFSET_X, ASTEROID_AREA_OFFSET_Y, addFuel, addScore, canvasHeight, canvasWidth, cell, columns, fuel, hasHandledBottomMiss, isRocketLaunched, loseFuel, markBottomMissHandled, pad, resetBottomMissState, rocket, rows, setBasePadSpeed, setBaseRocketSpeed, setGameOver, setRocketLaunched } from './game.js'
 import { chargeAbility } from './abilities.js'
 import { showGameOverModal, updateFuelTankLevel } from './ui.js'
 
@@ -36,6 +36,13 @@ const rockSpriteSources = {
 }
 
 const spriteCache = new Map()
+
+const asteroidScoreValues = {
+  normal: 1,
+  gray: 3,
+  blue: 5,
+  red: 10,
+}
 
 function loadSprite(src) {
   const cached = spriteCache.get(src)
@@ -292,6 +299,7 @@ export function handleAsteroidCollisions() {
     }
 
     bounceRocketOffAsteroid(asteroid)
+    addScore(asteroidScoreValues[asteroid.spriteColor] ?? asteroidScoreValues.normal)
 
     if (asteroid.spriteColor === 'red' || asteroid.spriteColor === 'blue') {
       chargeAbility(asteroid.spriteColor)
