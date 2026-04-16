@@ -3,13 +3,6 @@ export const canvasConfig = {
   height: 600,
 }
 
-export const colorConfig = {
-  rocket: 'red',
-  pad: 'blue',
-  background: 'lightgray',
-  asteroid: 'green',
-}
-
 export const asteroidLayoutConfig = {
   offsetX: 18,
   offsetY: 15,
@@ -30,28 +23,23 @@ export const modeConfig = {
     easy: {
       rocketSpeed: 4,
       padSpeed: 3,
-      speedMultiplier: 0,
     },
     medium: {
       rocketSpeed: 5,
       padSpeed: 4,
-      speedMultiplier: 0.02,
     },
     hard: {
       rocketSpeed: 7,
       padSpeed: 6,
-      speedMultiplier: 0.05,
     },
     experimental: {
       rocketSpeed: 5,
       padSpeed: 4,
-      speedMultiplier: 0,
     },
   },
 }
 
 export const featureConfig = {
-  useBonusAsteroids: true,
   enableDeath: true,
   maxFuel: 5,
   fuelBurnPerSecond: 0.1,

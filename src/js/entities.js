@@ -26,7 +26,7 @@ import rockRed6Url from '../assets/rocks/red/rock_6.png'
 import { featureConfig, rockSpriteConfig } from './config.js'
 import { ASTEROID_AREA_OFFSET_X, ASTEROID_AREA_OFFSET_Y, addFuel, addScore, canvasHeight, canvasWidth, cell, columns, fuel, hasHandledBottomMiss, isRocketLaunched, loseFuel, markBottomMissHandled, pad, resetBottomMissState, rocket, rows, setBasePadSpeed, setBaseRocketSpeed, setGameOver, setRocketLaunched } from './game.js'
 import { chargeAbility } from './abilities.js'
-import { showGameOverModal, updateFuelTankLevel } from './ui.js'
+import { openGameOverSweet, openWinSweet, updateFuelTankLevel } from './ui.js'
 
 const rockSpriteSources = {
   normal: [rockNormal1Url, rockNormal2Url, rockNormal3Url, rockNormal4Url, rockNormal5Url, rockNormal6Url],
@@ -208,7 +208,7 @@ export function handleWallCollisions() {
 
       if (fuel === 0) {
         setGameOver(true)
-        void showGameOverModal()
+        void openGameOverSweet()
       }
     }
 
@@ -311,6 +311,12 @@ export function handleAsteroidCollisions() {
     }
 
     removeAsteroidAtIndex(index)
+
+    if (asteroids.length === 0) {
+      setGameOver(true)
+      void openWinSweet()
+    }
+
     return
   }
 }

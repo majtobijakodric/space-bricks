@@ -3,15 +3,10 @@ import { gameCanvas } from './canvas.js'
 import { resetAbilitySystem } from './abilities.js'
 import { handleAsteroidCollisions, handlePadCollision, handleWallCollisions, initializeAsteroids, movePadBy, resetPadPosition, resetRocketLaunchState, resetRocketPosition, updateRocketPosition } from './entities.js'
 import { renderScene } from './render.js'
-import { resetGameOverModalState, showGameOverModal, syncCurrentScoreButton, syncPauseButtonUi, updateFuelTankLevel } from './ui.js'
+import { openGameOverSweet, resetEndSweetState, syncCurrentScoreButton, syncPauseButtonUi, updateFuelTankLevel } from './ui.js'
 
 export let canvasHeight = canvasConfig.height
 export let canvasWidth = canvasConfig.width
-
-export const rocketColor = 'red'
-export const padColor = 'blue'
-export const backgroundColor = 'lightgray'
-export const asteroidColor = 'green'
 
 export const ASTEROID_AREA_OFFSET_X = asteroidLayoutConfig.offsetX
 export const ASTEROID_AREA_OFFSET_Y = asteroidLayoutConfig.offsetY
@@ -128,6 +123,16 @@ function clearEffectTimer(timeoutId) {
   }
 }
 
+function applyPadInput() {
+  if (input.left) {
+    movePadBy(-pad.speed)
+  }
+
+  if (input.right) {
+    movePadBy(pad.speed)
+  }
+}
+
 function syncRocketVelocityToSpeed() {
   if (!isRocketLaunched) {
     rocket.dx = 0
@@ -237,7 +242,7 @@ export function restartGame() {
   resetPadPosition()
   initializeAsteroids()
   resetRocketLaunchState()
-  resetGameOverModalState()
+  resetEndSweetState()
   syncPauseButtonUi(false)
   updateFuelTankLevel(1)
 
@@ -270,13 +275,7 @@ function animateFrame(timestamp) {
   if (!isRocketLaunched) {
     lastActiveTimestamp = timestamp
 
-    if (input.left) {
-      movePadBy(-pad.speed)
-    }
-
-    if (input.right) {
-      movePadBy(pad.speed)
-    }
+    applyPadInput()
 
     resetRocketPosition()
     updateFuelTankLevel(fuel / featureConfig.maxFuel)
@@ -294,13 +293,7 @@ function animateFrame(timestamp) {
     }
   }
 
-  if (input.left) {
-    movePadBy(-pad.speed)
-  }
-
-  if (input.right) {
-    movePadBy(pad.speed)
-  }
+  applyPadInput()
 
   updateRocketPosition()
   handleWallCollisions()
@@ -311,7 +304,7 @@ function animateFrame(timestamp) {
     setGameOver(true)
     gameLoopActive = false
     renderScene()
-    void showGameOverModal()
+    void openGameOverSweet()
     return
   }
 
