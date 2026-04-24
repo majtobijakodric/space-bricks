@@ -7,8 +7,8 @@ A space-themed brick breaker where you guide a rocket through an asteroid field,
 - **Asteroid Field Gameplay** - Bounce the rocket off the pad and clear a 4 x 12 asteroid layout.
 - **Fuel System** - Fuel drains during flight and when the rocket drops below the play area; gray asteroids restore fuel.
 - **Ability System** - Blue and red asteroids charge abilities that apply random temporary gameplay effects.
-- **Difficulty Modes** - Easy, Medium, Hard, and Experimental presets change rocket and pad speed.
-- **Experimental Controls** - Experimental mode exposes SweetAlert sliders for manual rocket and pad speed tuning.
+- **Difficulty Modes** - Easy, Medium, Hard, and Experimental presets change rocket and pad speed through a SweetAlert2 mode picker.
+- **Experimental Controls** - Experimental mode also exposes SweetAlert sliders for manual rocket and pad speed tuning.
 - **Score History** - Runs are saved in local storage with score, timestamp, finish status, and difficulty.
 - **Win and Loss Modals** - SweetAlert2 is used for score history, settings, game over, and victory screens.
 - **Sprite-Based Visuals** - Pixel-art asteroid, rocket, and pad sprites sit on top of a space background with floating planets.
@@ -131,4 +131,4 @@ Space background: [Space Background Generator](https://deep-fold.itch.io/space-b
 
 ## License
 
-Not specified
+MIT License. See [LICENSE](LICENSE) for the full text.
